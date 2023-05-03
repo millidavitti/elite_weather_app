@@ -1,0 +1,16 @@
+.list {
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+}
+
+.listItem {
+	outline: auto;
+	width: 100%;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.listItem:active {
+	scale: 0.98;
+}

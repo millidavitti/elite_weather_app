@@ -1,0 +1,12 @@
+.flex {
+	display: flex;
+	position: relative;
+}
+
+.flexRow {
+	flex-direction: row;
+}
+
+.flexColumn {
+	flex-direction: column;
+}

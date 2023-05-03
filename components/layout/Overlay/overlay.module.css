@@ -1,0 +1,11 @@
+.overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background-color: #000000b2;
+	cursor: pointer;
+}
+
+.show {
+	display: flex;
+}

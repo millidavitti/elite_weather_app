@@ -1,0 +1,6 @@
+.section {
+	background-color: rgb(180, 180, 180);
+	display: flex;
+	min-height: 700px;
+	padding: 0 min(5vw, 10px);
+}
