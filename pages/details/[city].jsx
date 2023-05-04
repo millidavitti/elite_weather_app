@@ -38,11 +38,16 @@ import { useReducers } from "@/hooks/useReducers";
 import details from "../../styles/details.module.css";
 import home from "../../styles/Home.module.css";
 import flex from "@/components/layout/Flexbox/flex.module.css";
+import { fetchCities } from "@/utils/fetchCities";
 
 export default function Details() {
 	const [isActive, setIsActive] = useState(false);
-	const [cacheCity, setCacheCity] = useState(false);
-	const { detailsState, detailsDispatch, indexDispatch } = useReducers();
+	const [cacheCity, setCacheCity] = useState({
+		isCached: false,
+		city: null,
+	});
+	const { detailsState, detailsDispatch, indexDispatch, indexState } =
+		useReducers();
 	const query = useRouter().query;
 
 	useGetFromLocalStorage("app_state_notes", detailsDispatch);
@@ -51,6 +56,7 @@ export default function Details() {
 	useEffect(() => {
 		const isCoordinate = coordinatesRegex.test(query.city);
 		const expiration = JSON.parse(localStorage.getItem("update"));
+
 		async function fetchWithCoord(isCoordinate) {
 			try {
 				if (isCoordinate || Date.now() >= expiration) {
@@ -60,22 +66,33 @@ export default function Details() {
 							q: query.city,
 						},
 					});
-
+					const { cities, favourites } = await fetchCities(indexState);
 					setCacheCity({ isCached: false, city: data });
 					indexDispatch({ type: "revalidate_cache", city: data });
+
+					indexDispatch({
+						type: "populous_cities",
+						cities,
+						favourites,
+						revalidate: true,
+					});
 					localStorage.setItem(
 						"update",
-						JSON.stringify(Date.now() + 30 * 1000),
+						JSON.stringify(Date.now() + 300 * 1000),
 					);
+					// Else handles page reloads
 				} else setCacheCity(checkCache(cache, query.city));
 			} catch (error) {
+				// Handles Offline activity
+				setCacheCity(checkCache(cache, query.city));
+				localStorage.setItem("update", JSON.stringify(Date.now() + 60 * 1000));
 				console.error(error);
 			}
 		}
 		fetchWithCoord(isCoordinate);
-	}, [cache, indexDispatch, query.city]);
+	}, [cache, indexDispatch, indexState, query.city]);
 
-	console.log(cacheCity);
+	// console.log(cacheCity);
 	return (
 		<>
 			<Section>
@@ -306,7 +323,7 @@ export default function Details() {
 										)
 											return;
 										detailsDispatch({ type: "save_note" });
-										setIsActive();
+										setIsActive(!isActive);
 									}}
 								>
 									Save Note

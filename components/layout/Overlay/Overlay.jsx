@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import overlay from "./overlay.module.css";
 import dynamic from "./overlay.module.css";
 export default function Overlay({ children, isActive, setIsActive }) {
 	const elem = useRef();
 
 	useEffect(() => {
-		elem.current.classList.toggle(dynamic.show);
+		if (isActive) elem.current.classList.add(dynamic.show);
+		else elem.current.classList.remove(dynamic.show);
 	}, [isActive]);
 	return (
 		<div

@@ -49,8 +49,7 @@ function indexReducer(state, action) {
 	switch (action.type) {
 		case "populous_cities":
 			const savedState = localStorage.getItem("app_state_cities");
-
-			if (savedState) return state;
+			if (!action.revalidate && savedState) return state;
 
 			return {
 				...state,

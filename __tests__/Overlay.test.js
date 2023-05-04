@@ -10,7 +10,7 @@ describe("Overlay", () => {
 		);
 
 		const overlay = getByTestId("overlay");
-		overlay.classList.add("show");
+
 		expect(overlay).toHaveClass("overlay show");
 
 		const child = getByTestId("child");
@@ -25,7 +25,7 @@ describe("Overlay", () => {
 		);
 
 		const overlay = getByTestId("overlay");
-		overlay.classList.remove("show");
+
 		expect(overlay).not.toHaveClass("overlay show");
 
 		const child = getByTestId("child");
