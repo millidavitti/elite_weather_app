@@ -21,24 +21,22 @@ import {
 	Plus,
 	Sun,
 	Thermometer,
-	Timer,
 	Wind,
 	X,
 } from "phosphor-react";
 import Overlay from "@/components/layout/Overlay/Overlay";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useGetFromLocalStorage } from "@/hooks/useGetFromLocalStorage";
 import { useRouter } from "next/router";
 import Flex from "@/components/layout/Flexbox/Flex";
-import { checkCache } from "@/utils/checkCache";
-import axios from "axios";
+
 import { useReducers } from "@/hooks/useReducers";
 
 // css
 import details from "../../styles/details.module.css";
 import home from "../../styles/Home.module.css";
 import flex from "@/components/layout/Flexbox/flex.module.css";
-import { fetchCities } from "@/utils/fetchCities";
+import { useUpdateCache } from "@/hooks/useUpdateCache";
 
 export default function Details() {
 	const [isActive, setIsActive] = useState(false);
@@ -46,6 +44,7 @@ export default function Details() {
 		isCached: false,
 		city: null,
 	});
+
 	const { detailsState, detailsDispatch, indexDispatch, indexState } =
 		useReducers();
 	const query = useRouter().query;
@@ -53,46 +52,9 @@ export default function Details() {
 	useGetFromLocalStorage("app_state_notes", detailsDispatch);
 	const cache = useGetFromLocalStorage("app_state_cities", indexDispatch);
 
-	useEffect(() => {
-		const isCoordinate = coordinatesRegex.test(query.city);
-		const expiration = JSON.parse(localStorage.getItem("update"));
+	// Updates Cache and Loads Weather data based on users location (once)
+	useUpdateCache(query, indexState, indexDispatch, setCacheCity, cache);
 
-		async function fetchWithCoord(isCoordinate) {
-			try {
-				if (isCoordinate || Date.now() >= expiration) {
-					const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL, {
-						params: {
-							key: process.env.NEXT_PUBLIC_API_KEY,
-							q: query.city,
-						},
-					});
-					const { cities, favourites } = await fetchCities(indexState);
-					setCacheCity({ isCached: false, city: data });
-					indexDispatch({ type: "revalidate_cache", city: data });
-
-					indexDispatch({
-						type: "populous_cities",
-						cities,
-						favourites,
-						revalidate: true,
-					});
-					localStorage.setItem(
-						"update",
-						JSON.stringify(Date.now() + 300 * 1000),
-					);
-					// Else handles page reloads
-				} else setCacheCity(checkCache(cache, query.city));
-			} catch (error) {
-				// Handles Offline activity
-				setCacheCity(checkCache(cache, query.city));
-				localStorage.setItem("update", JSON.stringify(Date.now() + 60 * 1000));
-				console.error(error);
-			}
-		}
-		fetchWithCoord(isCoordinate);
-	}, [cache, indexDispatch, indexState, query.city]);
-
-	// console.log(cacheCity);
 	return (
 		<>
 			<Section>
@@ -337,7 +299,6 @@ export default function Details() {
 	);
 }
 
-const coordinatesRegex = /^[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+$/;
 // To be used with Component Style Config
 const csc = {
 	container: details.container,

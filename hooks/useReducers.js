@@ -49,7 +49,7 @@ function indexReducer(state, action) {
 	switch (action.type) {
 		case "populous_cities":
 			const savedState = localStorage.getItem("app_state_cities");
-			if (!action.revalidate && savedState) return state;
+			if (savedState && !action.revalidate) return state;
 
 			return {
 				...state,
@@ -141,7 +141,6 @@ function indexReducer(state, action) {
 			);
 
 			return revalidated_cache;
-
 		case "search_query":
 			return { ...state, searchQuery: action.data };
 		case "add_to_favourites":

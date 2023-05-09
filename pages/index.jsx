@@ -15,6 +15,7 @@ import { v4 as uuid } from "uuid";
 // css
 import home from "../styles/Home.module.css";
 import { useReducers } from "@/hooks/useReducers";
+import { SyncLoader } from "react-spinners";
 
 export default function Home() {
 	const { indexState, indexDispatch } = useReducers();
@@ -32,19 +33,27 @@ export default function Home() {
 					<Grid>
 						<List classes={csc.list}>
 							<h3>Favourites</h3>
-							{indexState.api.favourites?.map((fav) => (
-								<FavouriteCity
-									key={uuid()}
-									city={fav}
-									dispatch={indexDispatch}
-								/>
-							))}
+							{indexState.api.favourites ? (
+								indexState.api.favourites.map((fav) => (
+									<FavouriteCity
+										key={uuid()}
+										city={fav}
+										dispatch={indexDispatch}
+									/>
+								))
+							) : (
+								<SyncLoader style={{ margin: "0 auto" }} />
+							)}
 							<hr />
 
 							<h3>Cities</h3>
-							{indexState.api.cities?.map((city) => (
-								<City key={uuid()} city={city} dispatch={indexDispatch} />
-							))}
+							{indexState.api.cities ? (
+								indexState.api.cities?.map((city) => (
+									<City key={uuid()} city={city} dispatch={indexDispatch} />
+								))
+							) : (
+								<SyncLoader style={{ margin: "0 auto" }} />
+							)}
 						</List>
 
 						{/* Serach box */}
