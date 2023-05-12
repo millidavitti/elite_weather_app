@@ -2,13 +2,13 @@ import { fetchCities } from "@/utils/fetchCities";
 import { useEffect } from "react";
 import { checkCache } from "@/utils/checkCache";
 import axios from "axios";
-export function useUpdateCache(
-	query,
-	indexState,
-	indexDispatch,
-	setCacheCity,
-	cache,
-) {
+import { useGetFromLocalStorage } from "./useGetFromLocalStorage";
+import { useReducers } from "./useReducers";
+
+export function useUpdateCache(query, setCacheCity) {
+	const { indexDispatch, indexState } = useReducers();
+	const cache = useGetFromLocalStorage("app_state_cities", indexDispatch);
+
 	useEffect(() => {
 		const isCoordinate = coordinatesRegex.test(query.city);
 		const expiration = JSON.parse(localStorage.getItem("update"));
@@ -50,6 +50,6 @@ export function useUpdateCache(
 		}
 		fetchWithCoord(isCoordinate);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [indexDispatch, cache]);
+	}, [indexDispatch, cache, query]);
 }
 const coordinatesRegex = /^[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+$/;

@@ -45,15 +45,13 @@ export default function Details() {
 		city: null,
 	});
 
-	const { detailsState, detailsDispatch, indexDispatch, indexState } =
-		useReducers();
+	const { detailsState, detailsDispatch } = useReducers();
 	const query = useRouter().query;
 
 	useGetFromLocalStorage("app_state_notes", detailsDispatch);
-	const cache = useGetFromLocalStorage("app_state_cities", indexDispatch);
 
 	// Updates Cache and Loads Weather data based on users location (once)
-	useUpdateCache(query, indexState, indexDispatch, setCacheCity, cache);
+	useUpdateCache(query, setCacheCity);
 
 	return (
 		<>

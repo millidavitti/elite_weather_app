@@ -37,8 +37,8 @@ const cities = [
 // Index Page Reducer
 const indexInit = {
 	api: {
-		cities: null,
-		favourites: null,
+		cities: [],
+		favourites: [],
 	},
 	cities,
 	searchQuery: "",
@@ -199,6 +199,7 @@ function indexReducer(state, action) {
 			return state;
 	}
 }
+
 function compare(a, b) {
 	const nameA = a.location.name.toUpperCase();
 	const nameB = b.location.name.toUpperCase();

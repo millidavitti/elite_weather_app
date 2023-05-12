@@ -33,7 +33,7 @@ export default function Home() {
 					<Grid>
 						<List classes={csc.list}>
 							<h3>Favourites</h3>
-							{indexState.api.favourites ? (
+							{indexState.api.favourites.length ? (
 								indexState.api.favourites.map((fav) => (
 									<FavouriteCity
 										key={uuid()}
@@ -47,7 +47,7 @@ export default function Home() {
 							<hr />
 
 							<h3>Cities</h3>
-							{indexState.api.cities ? (
+							{indexState.api.cities.length ? (
 								indexState.api.cities?.map((city) => (
 									<City key={uuid()} city={city} dispatch={indexDispatch} />
 								))
