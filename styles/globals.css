@@ -14,4 +14,7 @@
 		text-align: center;
 		align-items: center;
 	}
+	body * {
+		display: none;
+	}
 }
