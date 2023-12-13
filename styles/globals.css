@@ -8,8 +8,7 @@
 
 @media screen and (max-width: 700px) {
 	body::before {
-		content: "Kindly view on a larger screen like a tablet or desktop. To view on mobile devices switch to desktop mode on your mobile browser. The purpose of this project
-is to demonstrate my component composition and test writing skills.";
+		content: "Kindly view on a larger screen like a tablet or desktop. To view on mobile devices switch to desktop mode on your mobile browser. The purpose of this project is to demonstrate my component composition and test writing skills.";
 		display: flex;
 		height: 100vh;
 		text-align: center;
